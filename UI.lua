@@ -1,0 +1,69 @@
+--================================
+-- MY UI LIBRARY (Rayfield Style)
+--================================
+local UILib = {}
+local Players = game:GetService("Players")
+local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- DEFAULT THEME
+UILib.Theme = {
+    Main = Color3.fromRGB(25,25,25),
+    Accent = Color3.fromRGB(0,170,255),
+    Text = Color3.new(1,1,1)
+}
+
+--==============================
+-- CREATE WINDOW
+--==============================
+function UILib:CreateWindow(config)
+    config = config or {}
+
+    local ScreenGui = Instance.new("ScreenGui", PlayerGui)
+    ScreenGui.ResetOnSpawn = false
+
+    local Main = Instance.new("Frame", ScreenGui)
+    Main.Size = UDim2.new(0, 420, 0, 320)
+    Main.Position = UDim2.new(0.5,-210,0.5,-160)
+    Main.BackgroundColor3 = UILib.Theme.Main
+    Instance.new("UICorner", Main).CornerRadius = UDim.new(0,14)
+
+    local Title = Instance.new("TextLabel", Main)
+    Title.Size = UDim2.new(1,0,0,40)
+    Title.BackgroundTransparency = 1
+    Title.Text = config.Name or "My UI"
+    Title.TextColor3 = UILib.Theme.Text
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 18
+
+    local Content = Instance.new("Frame", Main)
+    Content.Position = UDim2.new(0,0,0,40)
+    Content.Size = UDim2.new(1,0,1,-40)
+    Content.BackgroundTransparency = 1
+
+    local Window = {}
+
+    --==========================
+    -- CREATE TAB
+    --==========================
+    function Window:CreateTab(name)
+        local Tab = {}
+
+        function Tab:CreateSlider(cfg)
+            local Label = Instance.new("TextLabel", Content)
+            Label.Size = UDim2.new(1,-20,0,40)
+            Label.Position = UDim2.new(0,10,0,10)
+            Label.BackgroundColor3 = UILib.Theme.Accent
+            Label.Text = cfg.Name .. " : " .. cfg.CurrentValue
+            Label.TextColor3 = UILib.Theme.Text
+            Instance.new("UICorner", Label).CornerRadius = UDim.new(0,8)
+
+            cfg.Callback(cfg.CurrentValue)
+        end
+
+        return Tab
+    end
+
+    return Window
+end
+
+return UILib
